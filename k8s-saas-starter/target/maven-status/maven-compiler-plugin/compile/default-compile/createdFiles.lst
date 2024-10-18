@@ -1,3 +1,4 @@
-com\lzy\k8s\saas\starter\controller\K8sClusterController.class
 com\lzy\k8s\saas\starter\Application.class
 com\lzy\k8s\saas\starter\controller\LoginController.class
+com\lzy\k8s\saas\starter\controller\SaasAwsAccountController.class
+com\lzy\k8s\saas\starter\controller\K8sClusterController.class

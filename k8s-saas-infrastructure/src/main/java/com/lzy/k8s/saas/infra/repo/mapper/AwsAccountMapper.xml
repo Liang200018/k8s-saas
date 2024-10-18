@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lzy.k8s.saas.infra.repo.mapper.AwsAccountMapper">
+
+
+    <!--    根据user_id查询账户-->
+    <select id="findByAccountId" parameterType="String" resultType="com.lzy.k8s.saas.client.model.AwsAccountInfo">
+        select
+            account_id          AS accountId
+            ,user_id            AS userId
+            ,iam_user           AS iamUser
+            ,access_key_id      AS accessKeyId
+            ,secret_accessKey   AS secretAccessKey
+            ,created_time       AS createdTime
+            ,updated_time       AS updatedTime
+        from biz_center.aws_accounts
+        where user_name=#{user_name}
+    </select>
+
+
+    <insert id="insertAccount" parameterType="com.lzy.k8s.saas.client.model.AwsAccountInfo">
+        insert into biz_center.aws_accounts(
+        account_id
+        ,user_id
+        ,iam_user
+        ,access_key_id
+        ,secret_accessKey
+        ,created_time
+        ,updated_time
+        )
+        values(
+        #{accountId}
+        ,#{userId}
+        ,#{iamUser}
+        ,#{accessKeyId}
+        ,#{secretAccessKey}
+        ,#{createdTime}
+        ,#{updatedTime}
+        )
+    </insert>
+
+</mapper>

@@ -5,7 +5,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.jcraft.jsch.Session;
 import com.lzy.k8s.saas.client.dto.K8sClusterCreateDTO;
-import com.lzy.k8s.saas.client.param.EC2InstanceInfo;
+import com.lzy.k8s.saas.client.model.EC2InstanceInfo;
 import com.lzy.k8s.saas.client.param.K8sClusterCreateParam;
 import com.lzy.k8s.saas.core.param.K8sSetupContext;
 import com.lzy.k8s.saas.infra.param.Ec2ClientResult;
@@ -38,12 +38,14 @@ public class K8sClusterCreateService {
         return null;
     }
 
+
     private void checkConnectByPwd(K8sSetupContext context) {
         for (EC2InstanceInfo instanceInfo : context.getInstances()) {
             Session sshSession = JschUtils.getSshSession(context.getUsername(), context.getPassword(), instanceInfo.getPublicIpAddress(), 22, 600);
             if (sshSession.isConnected()) {
                 context.getInstanceId2PasswordAuthRst().put(instanceInfo.getInstanceId(), Boolean.TRUE);
             }
+            log.warn("{} can not auth by password", instanceInfo.getPublicIpAddress());
         }
     }
 
@@ -61,13 +63,13 @@ public class K8sClusterCreateService {
     }
 
     private void createKeyPair(K8sSetupContext context) {
-        Ec2ClientResult clientResult = ec2Remote.createKeyPair(context.getKeyPairName());
+//        Ec2ClientResult clientResult = ec2Remote.createKeyPair(context.getKeyPairName());
         // todo save pem file
         context.setPemFileUrl(null);
     }
 
     private void createSecurityGroup(K8sSetupContext context) {
-        ec2Remote.createSecurityGroup(context.getGroupName(), context.getGroupDesc(), context.getVpcId());
+//        ec2Remote.createSecurityGroup(context.getGroupName(), context.getGroupDesc(), context.getVpcId());
     }
 
     private K8sSetupContext convert2Context(K8sClusterCreateParam param) {
@@ -75,11 +77,15 @@ public class K8sClusterCreateService {
         // todo fill the context
 
         context.setRequestId(param.getRequestId());
+        // auth
         context.setKeyPairName(param.getKeyPairName());
+        // network
         context.setVpcId(param.getVpcId());
         context.setSecurityGroupIds(param.getSecurityGroupIds());
+        context.setGroupName(param.getGroupName());
+        context.setGroupDesc(param.getGroupDesc());
         context.setSubnetId(param.getSubnetId());
-        context.setKeyPairName(param.getKeyPairName());
+
 
         // fill the spec about common settings
         List<EC2InstanceInfo> specs = Lists.newArrayList();

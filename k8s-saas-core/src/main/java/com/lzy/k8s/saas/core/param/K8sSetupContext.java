@@ -1,7 +1,8 @@
 package com.lzy.k8s.saas.core.param;
 
 import com.amazonaws.services.ec2.model.Instance;
-import com.lzy.k8s.saas.client.param.EC2InstanceInfo;
+import com.lzy.k8s.saas.client.model.EC2InstanceInfo;
+import com.lzy.k8s.saas.infra.param.K8sSaasAccountInfo;
 import lombok.Data;
 
 import java.util.List;
@@ -42,5 +43,7 @@ public class K8sSetupContext {
      * imply the host can be connected by password
      */
     private Map<String, Boolean> instanceId2PasswordAuthRst;
+
+    private K8sSaasAccountInfo k8sSaasAccountInfo;
 
 }

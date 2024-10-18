@@ -1,31 +1,52 @@
 package com.lzy.k8s.saas.infra.remote;
 
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.AmazonEC2ClientBuilder;
 import com.amazonaws.services.ec2.model.*;
-import com.lzy.k8s.saas.client.param.EC2InstanceInfo;
+import com.lzy.k8s.saas.client.model.EC2InstanceInfo;
 import com.lzy.k8s.saas.client.result.ErrorCode;
 import com.lzy.k8s.saas.infra.exception.SystemException;
 import com.lzy.k8s.saas.infra.param.Ec2ClientResult;
+import lombok.Builder;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
-import java.io.File;
-import java.io.PrintWriter;
-import java.util.List;
 
 @Service
 @Slf4j
 public class Ec2Remote {
 
-    @Resource
-    private PemManager pemManager;
 
-    public void createSecurityGroup(String groupName, String groupDesc, String vpcId) {
+    /**
+     * generate a client given region, Credentials
+     * @param option
+     * @return
+     */
+    public static AmazonEC2 getClient(ClientOption option) {
+        AWSCredentialsProvider awsCredentialsProvider = new AWSCredentialsProvider() {
+            @Override
+            public AWSCredentials getCredentials() {
+
+                return new BasicAWSCredentials(option.getAccessKeyId(), option.getSecretAccessKey());
+            }
+
+            @Override
+            public void refresh() {
+                return;
+            }
+        };
+        AmazonEC2 ec2 = AmazonEC2ClientBuilder.standard().withRegion(option.getRegion())
+                .withCredentials(awsCredentialsProvider).build();
+        return ec2;
+    }
+
+    public void createSecurityGroup(String groupName, String groupDesc, String vpcId, ClientOption option) {
         try {
-            final AmazonEC2 ec2 = AmazonEC2ClientBuilder.defaultClient();
+            AmazonEC2 ec2 = getClient(option);
 
             CreateSecurityGroupRequest createRequest = new CreateSecurityGroupRequest()
                     .withGroupName(groupName)
@@ -62,8 +83,8 @@ public class Ec2Remote {
 
     }
 
-    public boolean existKeyPair(String keyPairName) {
-        final AmazonEC2 ec2 = AmazonEC2ClientBuilder.defaultClient();
+    public boolean existKeyPair(String keyPairName, ClientOption option) {
+        AmazonEC2 ec2 = getClient(option);
 
         // describe key pair
         DescribeKeyPairsResult describeKeyPairs = ec2.describeKeyPairs();
@@ -77,11 +98,11 @@ public class Ec2Remote {
         return checkKey;
     }
 
-    public Ec2ClientResult createKeyPair(String keyPairName) {
+    public Ec2ClientResult createKeyPair(String keyPairName, ClientOption option) {
         Ec2ClientResult clientResult = new Ec2ClientResult();
         try {
-            final AmazonEC2 ec2 = AmazonEC2ClientBuilder.defaultClient();
-            boolean checkKey = existKeyPair(keyPairName);
+            AmazonEC2 ec2 = getClient(option);
+            boolean checkKey = existKeyPair(keyPairName, option);
             if(!checkKey) {
                 // request
                 CreateKeyPairRequest request = new CreateKeyPairRequest()
@@ -137,5 +158,15 @@ public class Ec2Remote {
             log.error("createInstance fail, info: {}, e: ", spec, e);
             throw new SystemException(ErrorCode.BIZ_FAIL);
         }
+    }
+
+    @Data
+    @Builder
+    static class ClientOption {
+
+        private Regions region;
+        private String accessKeyId = "your-access-key-id";
+        private String secretAccessKey = "your-secret-access-key";
+
     }
 }

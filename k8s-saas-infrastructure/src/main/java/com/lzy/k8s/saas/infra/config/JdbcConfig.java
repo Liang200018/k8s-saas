@@ -19,7 +19,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableTransactionManagement
-@MapperScan("com.lzy.init.project.infra.repo.mapper")
+@MapperScan("com.lzy.k8s.saas.infra.repo.mapper")
 public class JdbcConfig {
 
     @Value("${spring.datasource.url}")

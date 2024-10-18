@@ -1,12 +1,5 @@
 com\lzy\k8s\saas\client\param\K8sClusterCreateParam.class
-com\lzy\k8s\saas\client\param\LoginParam.class
-com\lzy\k8s\saas\client\dto\AccountsDTO.class
+com\lzy\k8s\saas\client\param\SaasAccountParam.class
 com\lzy\k8s\saas\client\result\Result.class
-com\lzy\k8s\saas\client\dto\K8sClusterCreateDTO.class
-com\lzy\k8s\saas\client\constant\K8sNodeRoleEnum.class
-com\lzy\k8s\saas\client\constant\TT.class
-com\lzy\k8s\saas\client\param\BaseParam.class
-com\lzy\k8s\saas\client\dto\BaseDTO.class
-com\lzy\k8s\saas\client\param\EC2InstanceInfo.class
 com\lzy\k8s\saas\client\result\ErrorCode.class
 com\lzy\k8s\saas\client\service\TT.class

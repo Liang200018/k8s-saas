@@ -15,10 +15,9 @@ import org.springframework.context.annotation.Scope;
  */
 @SpringBootApplication(
         exclude = {KafkaAutoConfiguration.class, MongoAutoConfiguration.class, MongoDataAutoConfiguration.class},
-        scanBasePackages = {"com.lzy.init.project"})
+        scanBasePackages = {"com.lzy.k8s.saas"})
 @ImportResource({"classpath:*.xml"})
-@ComponentScan(basePackages = {"com.lzy.init.project"})
-@Scope
+@ComponentScan(basePackages = {"com.lzy.k8s.saas"})
 public class Application {
 
     public static void main(String[] args) {

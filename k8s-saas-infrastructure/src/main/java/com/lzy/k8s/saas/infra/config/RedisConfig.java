@@ -6,8 +6,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
-@ConfigurationProperties("spring.redis")
+//@Configuration
+//@ConfigurationProperties("spring.redis")
 public class RedisConfig {
 
     private String host;
@@ -16,7 +16,7 @@ public class RedisConfig {
     private Integer database;
 
 
-    @Bean
+//    @Bean
     RedisClient redisClient() {
         RedisURI uri = RedisURI.Builder.redis(this.host, this.port)
                 .withPassword(this.password)

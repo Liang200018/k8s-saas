@@ -26,7 +26,7 @@ public enum ErrorCode {
 
     QUERY_ERROR("CE100001", "参数构造出错"),
 
-    ACCOUNT_ERROR("CE100002", "账户不存在"),
+    ACCOUNT_ERROR("CE100002", "账户异常"),
 
     OPTIMISTIC_LOCKING_FAIL("CE100003", "乐观锁失败"),
 

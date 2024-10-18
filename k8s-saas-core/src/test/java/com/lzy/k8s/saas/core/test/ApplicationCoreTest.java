@@ -14,10 +14,10 @@ import org.springframework.context.annotation.ImportResource;
  * @Date: 2023/11/22
  */
 @SpringBootApplication(
-        exclude = {DataSourceAutoConfiguration.class, KafkaAutoConfiguration.class, MongoAutoConfiguration.class, MongoDataAutoConfiguration.class},
-        scanBasePackages = {"com.lzy.init.project"})
+        exclude = {DataSourceAutoConfiguration.class, MongoAutoConfiguration.class, MongoDataAutoConfiguration.class},
+        scanBasePackages = {"com.lzy.k8s.saas"})
 @ImportResource({"classpath:*.xml"})
-@ComponentScan(basePackages = {"com.lzy.init.project"})
+@ComponentScan(basePackages = {"com.lzy.k8s.saas"})
 public class ApplicationCoreTest {
 
     public static void main(String[] args) {
