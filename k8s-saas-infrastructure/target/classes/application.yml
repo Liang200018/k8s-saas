@@ -1,0 +1,50 @@
+# spring通用配置
+spring:
+  application:
+    name: init-project
+  mvc:
+    servlet:
+      load-on-startup: 1
+  profiles:
+    active: local
+
+#  h2:
+#    console:
+#      enabled: true
+#  datasource:
+#      url: jdbc:h2:file:~/biz_center
+#      username: lzy
+#      password: password
+#      driverClassName: org.h2.Driver
+  datasource:
+    url: jdbc:mysql://localhost:3306/biz_center?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+    username: biz_center
+    password: biz_center
+    driverClassName: com.mysql.cj.jdbc.Driver
+
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      auto-commit: true
+      idle-timeout: 30000
+      pool-name: mysql-pool
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+
+  sql:
+    init:
+      schema-locations: classpath:data/schema.sql
+      data-locations: classpath:data/data.sql
+      mode: always
+      enabled: true
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  checkConfigLocation: true
+
+# 服务配置
+server:
+  port: 30489
+  servlet:
+    context-path: /init-project

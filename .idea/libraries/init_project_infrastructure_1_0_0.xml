@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="init-project-infrastructure-1.0.0">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/init-project-infrastructure/target/init-project-infrastructure-1.0.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

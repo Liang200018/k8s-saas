@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lzy.k8s.saas.infra.repo.mapper.AccountMapper">
+    <!--    根据user_id查询账户-->
+    <select id="findByUserId" parameterType="string" resultType="com.lzy.k8s.saas.infra.param.AccountInfo">
+        select user_id, account_id, balance, currency, status from users_tmp where user_id=#{user_id}
+    </select>
+
+
+    <select id="findByAccountId" parameterType="string" resultType="com.lzy.k8s.saas.infra.param.AccountInfo">
+        select user_id, account_id, balance, currency, status from users_tmp where account_id=#{account_id}
+    </select>
+
+    <insert id="createAccount" parameterType="com.lzy.k8s.saas.infra.param.AccountInfo">
+        insert into users_tmp(user_id, balance, currency, created_time, updated_time) " +
+        "values(#{userId}, #{balance}, #{currency}, #{createdTime}, #{updatedTime})
+    </insert>
+
+    <update id="updateAccount" parameterType="com.lzy.k8s.saas.infra.param.AccountInfo">
+        update users_tmp set balance=#{balance}, updated_time=#{updatedTime} where account_id=#{accountId}
+    </update>
+</mapper>
