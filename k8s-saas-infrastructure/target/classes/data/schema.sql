@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS biz_center.aws_accounts (
     `secret_accessKey`       VARCHAR(128) NOT NULL ,
 
     `created_time`  DATETIME NOT NULL,
-    `updated_time`  DATETIME NOT NULL,
+    `updated_time`  DATETIME NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

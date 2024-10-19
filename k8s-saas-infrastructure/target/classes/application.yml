@@ -10,7 +10,7 @@ spring:
 
 
   datasource:
-    url: jdbc:mysql://3.26.55.26:3306/biz_center?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://3.26.202.232:3306/biz_center?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
     username: biz_center
     password: biz_center
     driverClassName: com.mysql.cj.jdbc.Driver
