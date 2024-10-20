@@ -2,12 +2,14 @@ package com.lzy.k8s.saas.infra.config;
 
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisURI;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-//@Configuration
-//@ConfigurationProperties("spring.redis")
+@Configuration
+@ConditionalOnProperty(name = "spring.redis.enabled", havingValue = "true")
+@ConfigurationProperties("spring.redis")
 public class RedisConfig {
 
     private String host;
@@ -16,7 +18,7 @@ public class RedisConfig {
     private Integer database;
 
 
-//    @Bean
+    @Bean
     RedisClient redisClient() {
         RedisURI uri = RedisURI.Builder.redis(this.host, this.port)
                 .withPassword(this.password)

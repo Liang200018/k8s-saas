@@ -18,7 +18,7 @@ public class CreateClusterChecker {
             throw new SystemException(ErrorCode.INVALID_PARAM, "ec2 instances is null");
         }
         // make sure at least one master node
-        boolean masterPresent = param.getInstances().stream().anyMatch(spec -> StringUtils.equals(K8sNodeRoleEnum.MASTER_NODE.getCode(), spec.getInstanceType()));
+        boolean masterPresent = param.getInstances().stream().anyMatch(spec -> StringUtils.equals(K8sNodeRoleEnum.MASTER_NODE.getCode(), spec.getRole()));
         if (!masterPresent) {
             throw new SystemException(ErrorCode.INVALID_PARAM, "miss master node");
         }

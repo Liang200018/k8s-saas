@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
  * @author yueqi
  * @date 2021/09/21
  */
-@Slf4j
 public class TimeUtils {
 
     private static final Logger log = LoggerFactory.getLogger(TimeUtils.class.getName());

@@ -1,11 +1,15 @@
 package com.lzy.k8s.saas.infra.utils;
 
+import com.google.common.collect.Lists;
 import com.jcraft.jsch.*;
 import com.lzy.k8s.saas.client.result.ErrorCode;
 import com.lzy.k8s.saas.infra.exception.SystemException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Properties;
 
@@ -16,7 +20,8 @@ public class JschUtils {
     private static Logger jschLogger = new Logger() {
         @Override
         public boolean isEnabled(int i) {
-            return true;
+            // only show warn error fatal
+            return i > 1;
         }
 
         @Override
@@ -32,28 +37,38 @@ public class JschUtils {
             } else if (i == 4) {
                 // fatal
                 log.error(s);
-            } else {
-                log.info(s);
             }
         }
     };
 
-    public static void closeSshSession(Session session) {
+    public static void closeAll(Session session, String privateKeyFile) {
         if (session != null) {
             session.disconnect();
         }
+        File file = new File(privateKeyFile);
+        if (file.exists()) {
+            boolean deleted = file.delete();
+            if (!deleted) {
+                log.info("delete the local pem file fail.");
+            }
+        }
     }
 
-    public static Session getSshSession(String username, String password, String host, Integer port,
+    public static Session getSshSession(String privateKey, String username, String password, String host, Integer port,
                                         Integer sessionTimeout) {
         try {
             JSch jsch = new JSch();
+            File file = new File(privateKey);
+            if (file.exists()) {
+                jsch.addIdentity(privateKey);
+            }
             JSch.setLogger(jschLogger);
             Session session = jsch.getSession(username, host, port);
             session.setPassword(password);
 
             Properties config = new Properties();
             config.put("StrictHostKeyChecking", "no");
+            config.put("PreferredAuthentications", "publickey,password");
             session.setConfig(config);
             // timeout seconds
             session.setTimeout(sessionTimeout);
@@ -67,55 +82,77 @@ public class JschUtils {
         }
     }
 
+    public static String execShellFromFile(Session session, File file) {
+        List<String> cmds = extractCmdsFromFile(file);
+        return execCmdByShell(session, cmds);
+    }
+
+    public static List<String> extractCmdsFromFile(File file) {
+        try {
+            if (file.exists()) {
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+                String line;
+                List<String> cmds = Lists.newArrayList();
+                while ((line = bufferedReader.readLine()) != null) {
+                    if (StringUtils.isNotBlank(line)) {
+                        cmds.add(line);
+                    }
+                }
+                return cmds;
+            }
+            return Lists.newArrayList();
+        } catch (IOException e) {
+            log.error("extractCmdsFromFile fail, err: ", e);
+            return Lists.newArrayList();
+        }
+    }
+
     public static String execCmdByShell(Session session, List<String> cmds) {
-        String result = "";
+        StringBuilder sb = new StringBuilder();
         ChannelShell channelShell = null;
         try {
             channelShell = (ChannelShell) session.openChannel("shell");
-
-            InputStream inputStream = channelShell.getInputStream();
             channelShell.setPty(true);
-            channelShell.connect();
 
+            InputStream fromServer = channelShell.getInputStream();
+            channelShell.connect();
             OutputStream outputStream = channelShell.getOutputStream();
-            PrintWriter printWriter = new PrintWriter(outputStream);
+            PrintWriter toServer = new PrintWriter(outputStream);
             for (String cmd : cmds) {
-                printWriter.println(cmd);
+                toServer.println(cmd);
             }
-            printWriter.flush();
+            toServer.flush();
+
+            // read the shell response
             byte[] tmp = new byte[1024];
             while (true) {
-                while (inputStream.available() > 0) {
-                    int i = inputStream.read(tmp, 0, 1024);
+                while (fromServer.available() > 0) {
+                    int i = fromServer.read(tmp, 0, 1024);
                     if (i < 0) {
                         break;
                     }
                     String s = new String(tmp, 0, i);
-                    if (s.contains("--More--")) {
-                        outputStream.write((" ").getBytes());
-                        outputStream.flush();
-                    }
-                    log.info(s);
+                    sb.append(s);
                 }
                 if (channelShell.isClosed()) {
                     log.info("exit-status:" + channelShell.getExitStatus());
                     break;
                 }
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(3000);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
             outputStream.close();
-            inputStream.close();
-        } catch(Exception e){
-            e.printStackTrace();
+            fromServer.close();
+        } catch(Throwable e){
+            log.error("execShellFromFile fail, err: ", e);
         } finally {
             if (channelShell != null) {
                 channelShell.disconnect();
             }
         }
-        return result;
+        return sb.toString();
     }
 }

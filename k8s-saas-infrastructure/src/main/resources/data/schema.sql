@@ -24,11 +24,10 @@ CREATE TABLE IF NOT EXISTS biz_center.aws_accounts (
     `updated_time`  DATETIME NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-    private String userId;
-
-    // aws
-    private  String accountId;
-    private String iamUser;
-    private String accessKeyId;
-    private String secretAccessKey;
+CREATE TABLE IF NOT EXISTS biz_center.aws_key_pairs (
+    `id`                BIGINT AUTO_INCREMENT PRIMARY KEY,
+    `account_id`           VARCHAR(20) NOT NULL,
+    `key_name`       VARCHAR(100) NOT NULL,
+    `key_material`       varbinary NOT NULL,
+    `created_time`  DATETIME NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

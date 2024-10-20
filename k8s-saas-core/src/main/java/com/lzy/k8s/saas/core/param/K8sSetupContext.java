@@ -1,11 +1,11 @@
 package com.lzy.k8s.saas.core.param;
 
 import com.amazonaws.services.ec2.model.Instance;
-import com.amazonaws.services.ec2.model.KeyPair;
 import com.lzy.k8s.saas.client.model.AwsAccountInfo;
 import com.lzy.k8s.saas.client.model.EC2InstanceInfo;
 import com.lzy.k8s.saas.core.service.SaasEc2Client;
 import com.lzy.k8s.saas.infra.param.K8sSaasAccountInfo;
+import com.lzy.k8s.saas.infra.param.AwsKeyPairInfo;
 import lombok.Data;
 
 import java.util.List;
@@ -46,22 +46,26 @@ public class K8sSetupContext {
     // auth
     private String pemFileUrl;
     private String keyPairName;
-    private KeyPair keyPair;
+    // first launch, save keyMaterial(private key)
+    private AwsKeyPairInfo keyPair;
 
     private List<EC2InstanceInfo> instances;
 
-    private Map<String, String> instanceId2JoinToken;
+    private String workerNodeJoinToken;
 
     private Map<String, Instance> instanceId2Info;
 
     /**
-     * imply the host can be connected by password
+     * imply the host can be connected by pem or password
      */
-    private Map<String, Boolean> instanceId2PasswordAuthRst;
+    private Map<String, Boolean> instanceId2AuthRst;
 
     private K8sSaasAccountInfo k8sSaasAccountInfo;
 
     // client
     private SaasEc2Client ec2Client;
+
+    // master node
+    private EC2InstanceInfo k8sMasterNode;
 
 }

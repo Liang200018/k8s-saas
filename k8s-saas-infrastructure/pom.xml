@@ -108,12 +108,17 @@
             <artifactId>bcpkix-jdk15on</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.jcraft</groupId>
+            <groupId>com.github.mwiede</groupId>
             <artifactId>jsch</artifactId>
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-ec2</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.common.fs</groupId>
+            <artifactId>jimfs</artifactId>
         </dependency>
     </dependencies>
 

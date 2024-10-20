@@ -96,13 +96,8 @@ public class SaasEc2Client {
         return Ec2ClientResult.builder().success(true).build();
     }
 
-    public Ec2ClientResult getOrCreateKeyPair(String keyPairName) {
+    public Ec2ClientResult createKeyPair(String keyPairName) {
         try {
-            Ec2ClientResult result = existKeyPair(keyPairName);
-            if (result.getKeyPair() != null) {
-                log.info("the key pair {} exist", keyPairName);
-                return result;
-            }
             // request
             CreateKeyPairRequest request = new CreateKeyPairRequest()
                     .withKeyName(keyPairName);

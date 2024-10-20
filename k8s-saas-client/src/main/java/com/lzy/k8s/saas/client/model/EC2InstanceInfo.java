@@ -12,8 +12,9 @@ public class EC2InstanceInfo {
 
     /**
      * required: yes
+     * K8sNodeRoleEnum
      */
-    private K8sNodeRoleEnum role;
+    private String role;
 
     /**
      * required: yes
@@ -46,5 +47,6 @@ public class EC2InstanceInfo {
     // change when the instance was stopped, then start
     private String publicDnsName;
     private String publicIpAddress;
+    private String privateIpAddress;
 
 }

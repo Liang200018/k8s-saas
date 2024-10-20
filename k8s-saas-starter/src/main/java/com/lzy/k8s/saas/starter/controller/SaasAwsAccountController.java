@@ -1,6 +1,5 @@
 package com.lzy.k8s.saas.starter.controller;
 
-import com.lzy.k8s.saas.client.model.AwsAccountInfo;
 import com.lzy.k8s.saas.client.param.AddAwsAccountRequest;
 import com.lzy.k8s.saas.client.param.SaasAccountParam;
 import com.lzy.k8s.saas.client.result.ErrorCode;

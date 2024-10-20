@@ -3,7 +3,6 @@ package com.lzy.k8s.saas.core.test;
 import com.amazonaws.regions.Regions;
 import com.lzy.k8s.saas.client.model.AwsAccountInfo;
 import com.lzy.k8s.saas.core.service.K8sSaasAccountInfoService;
-import com.lzy.k8s.saas.infra.param.K8sSaasAccountInfo;
 import com.lzy.k8s.saas.infra.repo.mapper.AwsAccountMapper;
 import org.junit.Test;
 
