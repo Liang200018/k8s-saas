@@ -2,13 +2,10 @@ package com.lzy.k8s.saas.core.checker;
 
 import com.lzy.k8s.saas.client.param.SaasAccountParam;
 import com.lzy.k8s.saas.client.result.ErrorCode;
-import com.lzy.k8s.saas.infra.constants.AccountStatusEnum;
 import com.lzy.k8s.saas.infra.exception.SystemException;
 import com.lzy.k8s.saas.infra.param.K8sSaasAccountInfo;
 import com.lzy.k8s.saas.infra.repo.mapper.K8sSaasAccountMapper;
-import com.lzy.k8s.saas.infra.utils.MessageDigestUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -22,36 +19,31 @@ public class SaasAccountChecker {
 
     /**
      * hard check, if not login, throw
-     *
-     * @param account
+     * @param accountParam
+     * @return
      */
-    public void checkLogin(SaasAccountParam account) {
-        if (inLoginStatus(account.getUserName(), account.getPassword(), account.getPhone())) {
-            return;
+    public K8sSaasAccountInfo checkLogin(SaasAccountParam accountParam) {
+        K8sSaasAccountInfo loginAccount = getLoginAccount(accountParam.getUserName(), accountParam.getPassword(), accountParam.getPhone());
+        if (loginAccount != null) {
+            return loginAccount;
         }
         throw new SystemException(ErrorCode.BIZ_FAIL, "user not login, can not do the operation");
     }
 
     /**
-     * soft check
+     * soft check, null means the account is not registered or not login
      * @param userName
      * @param password
      * @param phone
      * @return
      */
-    public boolean inLoginStatus(String userName, String password, String phone) {
-        K8sSaasAccountInfo saasAccountInfo = new K8sSaasAccountInfo(userName, password, phone);
-
+    public K8sSaasAccountInfo getLoginAccount(String userName, String password, String phone) {
         K8sSaasAccountInfo searched = accountMapper.findByUserName(userName);
-
         // compare the userInfo
-        if (searched != null && StringUtils.equals(searched.getUserName(), userName)
-                && MessageDigestUtils.canMatch(password, searched.getPassword())
-                && StringUtils.equals(searched.getPhone(), phone)
-        ) {
-            return AccountStatusEnum.LOGIN.getStatus().equals(searched.getStatus());
+        if (searched != null && searched.sameAccount(userName, password, phone) && searched.inLoginStatus()) {
+            return searched;
         }
-        return false;
+        return null;
     }
 
     /**

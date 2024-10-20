@@ -38,6 +38,12 @@ public class JschUtils {
         }
     };
 
+    public static void closeSshSession(Session session) {
+        if (session != null) {
+            session.disconnect();
+        }
+    }
+
     public static Session getSshSession(String username, String password, String host, Integer port,
                                         Integer sessionTimeout) {
         try {

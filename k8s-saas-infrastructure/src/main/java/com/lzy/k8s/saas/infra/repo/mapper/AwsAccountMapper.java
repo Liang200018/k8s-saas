@@ -9,6 +9,7 @@ public interface AwsAccountMapper {
 
     int insertAccount(AwsAccountInfo awsAccountInfo);
 
+    AwsAccountInfo findByUserId(@Param("user_id")  Long userId);
 
     AwsAccountInfo findByAccountId(@Param("account_id")  String accountId);
 }

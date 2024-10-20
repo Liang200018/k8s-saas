@@ -38,11 +38,12 @@ public class EC2InstanceInfo {
     // auth
     private String keyPairName;
 
-    private Integer cnt;
-
 
     // after the instance launch, update the attribute
+    // unchangeable since create
     private String instanceId;
+
+    // change when the instance was stopped, then start
     private String publicDnsName;
     private String publicIpAddress;
 

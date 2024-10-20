@@ -6,6 +6,7 @@ import com.lzy.k8s.saas.client.result.Result;
 import com.lzy.k8s.saas.core.checker.CreateClusterChecker;
 import com.lzy.k8s.saas.core.checker.SaasAccountChecker;
 import com.lzy.k8s.saas.core.service.K8sClusterCreateService;
+import com.lzy.k8s.saas.infra.param.K8sSaasAccountInfo;
 import com.lzy.k8s.saas.infra.utils.ResultUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -29,8 +30,7 @@ public class K8sClusterController {
         try {
             // if param not valid or not login, throw
             CreateClusterChecker.checkCluster(param);
-            saasAccountChecker.checkLogin(param.getSaasAccountParam());
-
+            // inner check login
             K8sClusterCreateDTO clusterCreateDTO = k8sClusterCreateService.createCluster(param);
             return Result.ofSuccess(clusterCreateDTO);
         } catch (Throwable e) {

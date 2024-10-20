@@ -6,6 +6,19 @@
 
 
     <!--    根据user_id查询账户-->
+    <select id="findByUserId" parameterType="Long" resultType="com.lzy.k8s.saas.client.model.AwsAccountInfo">
+        select
+        account_id          AS accountId
+        ,user_id            AS userId
+        ,iam_user           AS iamUser
+        ,access_key_id      AS accessKeyId
+        ,secret_accessKey   AS secretAccessKey
+        ,created_time       AS createdTime
+        ,updated_time       AS updatedTime
+        from biz_center.aws_accounts
+        where user_id=#{user_id}
+    </select>
+
     <select id="findByAccountId" parameterType="String" resultType="com.lzy.k8s.saas.client.model.AwsAccountInfo">
         select
             account_id          AS accountId
@@ -16,7 +29,7 @@
             ,created_time       AS createdTime
             ,updated_time       AS updatedTime
         from biz_center.aws_accounts
-        where user_name=#{user_name}
+        where account_id=#{account_id}
     </select>
 
 

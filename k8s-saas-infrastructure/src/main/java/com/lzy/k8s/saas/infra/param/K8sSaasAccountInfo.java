@@ -1,7 +1,9 @@
 package com.lzy.k8s.saas.infra.param;
 
+import com.lzy.k8s.saas.infra.constants.AccountStatusEnum;
 import com.lzy.k8s.saas.infra.utils.MessageDigestUtils;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 
@@ -32,5 +34,21 @@ public class K8sSaasAccountInfo {
         this.phone = phone;
     }
 
+    /**
+     * decide the account is the same account
+     * @param userName
+     * @param password is text, not encrypted
+     * @param phone
+     * @return
+     */
+    public boolean sameAccount(String userName, String password, String phone) {
+        return StringUtils.equals(this.userName, userName)
+                && MessageDigestUtils.canMatch(password, this.password)
+                && StringUtils.equals(this.phone, phone);
+    }
+
+    public boolean inLoginStatus() {
+        return AccountStatusEnum.LOGIN.getStatus().equals(this.status);
+    }
 
 }

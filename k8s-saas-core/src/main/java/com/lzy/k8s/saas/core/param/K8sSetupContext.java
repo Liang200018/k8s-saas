@@ -1,7 +1,10 @@
 package com.lzy.k8s.saas.core.param;
 
 import com.amazonaws.services.ec2.model.Instance;
+import com.amazonaws.services.ec2.model.KeyPair;
+import com.lzy.k8s.saas.client.model.AwsAccountInfo;
 import com.lzy.k8s.saas.client.model.EC2InstanceInfo;
+import com.lzy.k8s.saas.core.service.SaasEc2Client;
 import com.lzy.k8s.saas.infra.param.K8sSaasAccountInfo;
 import lombok.Data;
 
@@ -15,8 +18,19 @@ public class K8sSetupContext {
 
     private String bizLogKey;
 
-    private String username;
-    private String password;
+    /**
+     * saas account
+     */
+    private K8sSaasAccountInfo saasAccountInfo;
+
+    /**
+     * aws account
+     */
+    private AwsAccountInfo awsAccountInfo;
+
+    // for log in the host by ssh
+    private String linuxUsername;
+    private String linuxPassword;
 
     // vpc manually set
     private String vpcId;
@@ -32,6 +46,7 @@ public class K8sSetupContext {
     // auth
     private String pemFileUrl;
     private String keyPairName;
+    private KeyPair keyPair;
 
     private List<EC2InstanceInfo> instances;
 
@@ -45,5 +60,8 @@ public class K8sSetupContext {
     private Map<String, Boolean> instanceId2PasswordAuthRst;
 
     private K8sSaasAccountInfo k8sSaasAccountInfo;
+
+    // client
+    private SaasEc2Client ec2Client;
 
 }
