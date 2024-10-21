@@ -1,4 +1,4 @@
-package com.lzy.k8s.saas.starter.controller;
+package com.lzy.k8s.saas.gateway.http;
 
 import com.lzy.k8s.saas.client.dto.K8sClusterCreateDTO;
 import com.lzy.k8s.saas.client.param.K8sClusterCreateParam;
@@ -6,11 +6,12 @@ import com.lzy.k8s.saas.client.result.Result;
 import com.lzy.k8s.saas.core.checker.CreateClusterChecker;
 import com.lzy.k8s.saas.core.checker.SaasAccountChecker;
 import com.lzy.k8s.saas.core.service.K8sClusterCreateService;
-import com.lzy.k8s.saas.infra.param.K8sSaasAccountInfo;
 import com.lzy.k8s.saas.infra.utils.ResultUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
@@ -25,7 +26,7 @@ public class K8sClusterController {
     @Resource
     private SaasAccountChecker saasAccountChecker;
 
-    @PostMapping(value = "/cluster/create", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/cluster", produces = MediaType.APPLICATION_JSON_VALUE)
     public Result<K8sClusterCreateDTO> createCluster(@RequestBody K8sClusterCreateParam param) {
         try {
             // if param not valid or not login, throw

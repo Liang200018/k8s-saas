@@ -1,6 +1,6 @@
-package com.lzy.k8s.saas.starter.controller;
+package com.lzy.k8s.saas.gateway.http;
 
-import com.lzy.k8s.saas.client.param.AddAwsAccountRequest;
+import com.lzy.k8s.saas.client.param.AwsAccountRequest;
 import com.lzy.k8s.saas.client.param.SaasAccountParam;
 import com.lzy.k8s.saas.client.result.ErrorCode;
 import com.lzy.k8s.saas.client.result.Result;
@@ -21,7 +21,7 @@ import javax.annotation.Resource;
  * manage the sass user's aws account
  */
 @RestController
-@RequestMapping("/aws")
+@RequestMapping("/admin/aws")
 @Slf4j
 public class SaasAwsAccountController {
 
@@ -32,27 +32,27 @@ public class SaasAwsAccountController {
     private SaasAccountChecker saasAccountChecker;
 
     /**
-     * add aws account
-     * @param addAwsAccountRequest
+     * add aws user
+     * @param awsAccountRequest
      * @return true: add success
      */
-    @PostMapping(value = "/add", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Result<Boolean> addAwsAccount(@RequestBody AddAwsAccountRequest addAwsAccountRequest) {
+    @PostMapping(value = "user", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Result<Boolean> addAwsAccount(@RequestBody AwsAccountRequest awsAccountRequest) {
         try {
-            checkValid(addAwsAccountRequest);
-            int inserted = awsAccountMapper.insertAccount(addAwsAccountRequest.getAwsAccountInfo());
+            checkValid(awsAccountRequest);
+            int inserted = awsAccountMapper.insertAccount(awsAccountRequest.getAwsAccountInfo());
             if (inserted > 0) {
                 log.info("add aws account success");
                 return Result.ofSuccess(true);
             }
             return Result.ofSuccess(false);
         } catch (Throwable throwable) {
-            log.error("add aws account fail, param: {}, err: ", addAwsAccountRequest, throwable);
+            log.error("add aws account fail, param: {}, err: ", awsAccountRequest, throwable);
             return ResultUtils.getResult(throwable);
         }
     }
 
-    private void checkValid(AddAwsAccountRequest request) {
+    private void checkValid(AwsAccountRequest request) {
         if (request == null || request.getSaasAccountParam() == null || request.getAwsAccountInfo() == null) {
             throw new SystemException(ErrorCode.INVALID_PARAM);
         }

@@ -5,13 +5,13 @@ import com.lzy.k8s.saas.infra.constants.AccountStatusEnum;
 import com.lzy.k8s.saas.infra.exception.SystemException;
 import com.lzy.k8s.saas.infra.param.K8sSaasAccountInfo;
 import com.lzy.k8s.saas.infra.repo.mapper.K8sSaasAccountMapper;
-import com.lzy.k8s.saas.infra.utils.MessageDigestUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -50,13 +50,9 @@ public class K8sSaasAccountInfoService {
 
     public K8sSaasAccountInfo login(String userName, String password, String phone) {
         K8sSaasAccountInfo saasAccountInfo = new K8sSaasAccountInfo(userName, password, phone);
-
         K8sSaasAccountInfo accountInfo = k8sSaasAccountMapper.findByUserName(userName);
         // compare the userInfo
-        if (StringUtils.equals(accountInfo.getUserName(), userName)
-                && MessageDigestUtils.canMatch(password, accountInfo.getPassword())
-                && StringUtils.equals(accountInfo.getPhone(), phone)
-        ) {
+        if (Objects.nonNull(accountInfo) && accountInfo.sameAccount(userName, password, phone)) {
             accountInfo.setLatestLoginTime(new Date());
             accountInfo.setStatus(AccountStatusEnum.LOGIN.getStatus());
             int updated = k8sSaasAccountMapper.updateAccount(accountInfo);
@@ -64,7 +60,6 @@ public class K8sSaasAccountInfoService {
                 log.info("username {} has successfully login", userName);
                 return accountInfo;
             }
-
             // login fail
             log.error("update login status fail");
             saasAccountInfo.setLatestLoginTime(null);
@@ -76,10 +71,7 @@ public class K8sSaasAccountInfoService {
 
     public K8sSaasAccountInfo logout(K8sSaasAccountInfo cur) {
         K8sSaasAccountInfo accountInfo = k8sSaasAccountMapper.findByUserName(cur.getUserName());
-        if (accountInfo != null && StringUtils.equals(accountInfo.getUserName(), cur.getUserName())
-                && StringUtils.equals(accountInfo.getPassword(), cur.getPassword())
-                && StringUtils.equals(accountInfo.getPhone(), cur.getPhone())
-        ) {
+        if (Objects.nonNull(accountInfo) && accountInfo.sameAccount(cur.getUserName(), cur.getPassword(), cur.getPhone())) {
             // change login status to offline
             accountInfo.setStatus(AccountStatusEnum.REGISTER.getStatus());
             int updated = k8sSaasAccountMapper.updateAccount(accountInfo);
