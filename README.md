@@ -22,6 +22,7 @@ Now I only test those with simple function, and call the api by postman.
 + Database: MySQL  
 + Memory DataBase: Jimfs, save the pem file
 
+![功能模块](./docs/功能交互.jpg "功能模块")
 ## Support documentations
 
 + [Setup Your K8s Cluster with AWS EC2](https://milindasenaka96.medium.com/setup-your-k8s-cluster-with-aws-ec2-3768d78e7f05)
