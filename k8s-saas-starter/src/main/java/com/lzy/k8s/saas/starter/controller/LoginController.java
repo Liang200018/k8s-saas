@@ -5,6 +5,7 @@ import com.lzy.k8s.saas.client.param.SaasAccountParam;
 import com.lzy.k8s.saas.client.result.Result;
 import com.lzy.k8s.saas.core.checker.SaasAccountChecker;
 import com.lzy.k8s.saas.core.service.K8sSaasAccountInfoService;
+import com.lzy.k8s.saas.infra.constants.AccountStatusEnum;
 import com.lzy.k8s.saas.infra.param.K8sSaasAccountInfo;
 import com.lzy.k8s.saas.infra.utils.ResultUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Objects;
 
 /**
  * The endpoint is about manage the k8s saas account
@@ -80,6 +82,8 @@ public class LoginController {
         accountsDTO.setUserId(accountInfo.getUserId());
         accountsDTO.setRegisterTime(accountInfo.getRegisterTime());
         accountsDTO.setLatestLoginTime(accountInfo.getLatestLoginTime());
+
+        accountsDTO.setStatusMsg(accountInfo.showAccountMsg());
         return accountsDTO;
     }
 }

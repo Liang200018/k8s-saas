@@ -13,4 +13,5 @@ public class AccountsDTO extends BaseDTO {
 
     private Date registerTime;
     private Date latestLoginTime;
+    private String statusMsg;
 }

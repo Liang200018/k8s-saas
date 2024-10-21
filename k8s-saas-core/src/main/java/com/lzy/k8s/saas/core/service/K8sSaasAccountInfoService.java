@@ -57,12 +57,12 @@ public class K8sSaasAccountInfoService {
                 && MessageDigestUtils.canMatch(password, accountInfo.getPassword())
                 && StringUtils.equals(accountInfo.getPhone(), phone)
         ) {
-            saasAccountInfo.setLatestLoginTime(new Date());
-            saasAccountInfo.setStatus(AccountStatusEnum.LOGIN.getStatus());
+            accountInfo.setLatestLoginTime(new Date());
+            accountInfo.setStatus(AccountStatusEnum.LOGIN.getStatus());
             int updated = k8sSaasAccountMapper.updateAccount(accountInfo);
             if (updated > 0) {
                 log.info("username {} has successfully login", userName);
-                return saasAccountInfo;
+                return accountInfo;
             }
 
             // login fail
@@ -81,11 +81,11 @@ public class K8sSaasAccountInfoService {
                 && StringUtils.equals(accountInfo.getPhone(), cur.getPhone())
         ) {
             // change login status to offline
-            cur.setStatus(AccountStatusEnum.REGISTER.getStatus());
+            accountInfo.setStatus(AccountStatusEnum.REGISTER.getStatus());
             int updated = k8sSaasAccountMapper.updateAccount(accountInfo);
             if (updated > 0) {
                 log.info("username {} has successfully logout", cur.getUserName());
-                return cur;
+                return accountInfo;
             }
             log.error("update logout status fail");
         }

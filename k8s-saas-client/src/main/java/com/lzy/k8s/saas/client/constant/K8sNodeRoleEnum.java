@@ -12,7 +12,7 @@ public enum K8sNodeRoleEnum {
     private String code;
     private String desc;
 
-    K8sNodeRoleEnum(String roleCode, String desc) {
+    K8sNodeRoleEnum(String code, String desc) {
         this.code = code;
         this.desc = desc;
     }

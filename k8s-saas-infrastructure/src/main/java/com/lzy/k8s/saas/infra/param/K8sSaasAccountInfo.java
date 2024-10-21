@@ -51,4 +51,16 @@ public class K8sSaasAccountInfo {
         return AccountStatusEnum.LOGIN.getStatus().equals(this.status);
     }
 
+    public String showAccountMsg() {
+        if (AccountStatusEnum.REGISTER.getStatus().equals(this.status)) {
+            return  "user register, without login";
+        }
+        if (AccountStatusEnum.LOGIN.getStatus().equals(this.status)) {
+            return  "user log in";
+        }
+        if (AccountStatusEnum.STOPPED.getStatus().equals(this.status)) {
+            return  "user stopped";
+        }
+        return "user not register";
+    }
 }
