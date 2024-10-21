@@ -12,7 +12,7 @@
         ,created_time       AS createdTime
         from biz_center.aws_key_pairs
         where account_id=#{account_id}
-        and key_name=#{keyName}
+        and key_name=#{key_name}
     </select>
 
     <insert id="insertKeyPair" parameterType="com.lzy.k8s.saas.infra.param.AwsKeyPairInfo">

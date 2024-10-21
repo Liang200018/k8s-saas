@@ -23,13 +23,9 @@ public class KeyPairRepositoryImpl implements KeyPairRepository {
 
     private AwsKeyPairMapper awsKeyPairMapper;
 
-    public KeyPairRepositoryImpl(AwsAccountInfo awsAccountInfo, SaasEc2Client ec2Client) {
+    public KeyPairRepositoryImpl(AwsAccountInfo awsAccountInfo, SaasEc2Client ec2Client, AwsKeyPairMapper awsKeyPairMapper) {
         this.awsAccountInfo = awsAccountInfo;
         this.ec2Client = ec2Client;
-    }
-
-    @Autowired
-    public void setAwsKeyPairMapper(AwsKeyPairMapper awsKeyPairMapper) {
         this.awsKeyPairMapper = awsKeyPairMapper;
     }
 

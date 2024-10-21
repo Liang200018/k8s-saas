@@ -138,7 +138,7 @@ public class K8sClusterCreateService {
             context.setSecurityGroupIds(securityGroup);
         }
         // prepare key pair
-        KeyPairRepository keyPairRepo = new KeyPairRepositoryImpl(context.getAwsAccountInfo(), ec2Client);
+        KeyPairRepository keyPairRepo = new KeyPairRepositoryImpl(context.getAwsAccountInfo(), ec2Client, awsKeyPairMapper);
         AwsKeyPairInfo awsKeyPairInfo = keyPairRepo.find(context.getKeyPairName());
         if (Objects.nonNull(awsKeyPairInfo)) {
             context.setKeyPair(awsKeyPairInfo);
@@ -182,7 +182,7 @@ public class K8sClusterCreateService {
 
 
         // fill the spec about common settings
-        List<EC2InstanceInfo> specs = Lists.newArrayList();
+        List<EC2InstanceInfo> specs = param.getInstances();
         for (EC2InstanceInfo spec : specs) {
             spec.setSecurityGroupIds(param.getSecurityGroupIds());
             spec.setSubnetId(param.getSubnetId());
